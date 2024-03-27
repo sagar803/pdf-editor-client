@@ -10,7 +10,7 @@ export const Profile = ({user, isAuth, setIsAuth}: ProfileProps) => {
     const [files, setFiles] = useState<any>(null);
     const fetchFiles = async () => {
         try {            
-            const response = await fetch(`http://localhost:6001/files/${user?.userId}`, {method: 'GET'});
+            const response = await fetch(`${process.env.REACT_APP_API}/files/${user?.userId}`, {method: 'GET'});
             if (!response.ok) throw new Error('Failed to fetch files');
             const files = await response.json();
             setFiles(files);

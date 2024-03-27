@@ -75,7 +75,7 @@ export const Home = ({user, isAuth, setIsAuth} : HomeProps) => {
                           <a
                             className="bg-blue-500 text-white font-bold py-2 px-4 rounded m-2 cursor-pointer" 
                             target="_blank"
-                            href={`http://localhost:6001/${modificationResponse.modifiedToFilePath}`}
+                            href={`${process.env.REACT_APP_API}/${modificationResponse.modifiedToFilePath}`}
                             download
                           >
                             Download Modified File
