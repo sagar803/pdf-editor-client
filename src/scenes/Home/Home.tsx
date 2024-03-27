@@ -28,7 +28,7 @@ export const Home = ({user, isAuth, setIsAuth} : HomeProps) => {
           formData.append("selectedPages", JSON.stringify(Array.from(selectedPages)));
           if (user && user.userId) formData.append('userId', user.userId);
 
-          const res = await fetch('http://localhost:6001/files/upload', {method: "POST", body: formData});
+          const res = await fetch(`${process.env.REACT_APP_API}/files/upload`, {method: "POST", body: formData});
           
           if (res.ok) {
             const data = await res.json();

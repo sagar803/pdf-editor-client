@@ -46,7 +46,7 @@ export const Auth = ({ isAuth, setUser, setIsAuth }: authProps) => {
             const schema = pageType === 'login' ? loginSchema : registrationSchema;
             await schema.validate(credentials, { abortEarly: false });
             setLoading(true);
-            const res = await fetch(`http://localhost:6001/${pageType}`, {
+            const res = await fetch(`${process.env.REACT_APP_API}/${pageType}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

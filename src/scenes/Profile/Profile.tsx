@@ -33,7 +33,7 @@ export const Profile = ({user, isAuth, setIsAuth}: ProfileProps) => {
                             <BsFiletypePdf  size={50}/>
                             <div>
                                 <p className="font-semibold">{file.filePath}</p>
-                                <a href={`http://localhost:6001/${file.filePath}`} target='blank' download className="text-blue-600 hover:text-blue-800"><BsDownload /></a>
+                                <a href={`${process.env.REACT_APP_API}/${file.filePath}`} target='blank' download className="text-blue-600 hover:text-blue-800"><BsDownload /></a>
                             </div>
                         </div>
                         <MdOutlineArrowForward size={25}/>
@@ -41,7 +41,7 @@ export const Profile = ({user, isAuth, setIsAuth}: ProfileProps) => {
                             <BsFiletypePdf size={50}/>
                             <div>
                                 <p className="font-semibold">{file.modifiedToFilePath}</p>
-                                <a href={`http://localhost:6001/${file.modifiedToFilePath}`} target='blank' download className="text-blue-600 hover:text-blue-800"><BsDownload /></a>
+                                <a href={`${process.env.REACT_APP_API}/${file.modifiedToFilePath}`} target='blank' download className="text-blue-600 hover:text-blue-800"><BsDownload /></a>
                             </div>
                         </div>
 
