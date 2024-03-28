@@ -64,10 +64,9 @@ export const Auth = ({ isAuth, setUser, setIsAuth }: authProps) => {
         } catch (error : any) {
             console.log(error);
             if (error.inner) {
-                // Validation failed, update the formErrors state with the error messages
                 const errors: Record<string, string> = {};
                 error.inner.forEach((e: Yup.ValidationError) => {
-                    if (e.path) { // Check if e.path exists
+                    if (e.path) {
                         errors[e.path] = e.message;
                     }
                 });

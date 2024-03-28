@@ -25,7 +25,7 @@ export const Home = ({user, isAuth, setIsAuth} : HomeProps) => {
     
     const handleUpload = async (e: React.FormEvent) => {
       e.preventDefault();
-      if (selectedFile) {
+      if (selectedFile && selectedPages.size > 0) {
         setLoading(true);
         try {
           const formData = new FormData();
@@ -37,10 +37,6 @@ export const Home = ({user, isAuth, setIsAuth} : HomeProps) => {
           
           if (res.ok) {
             const data = await res.json();
-
-            // const pdfBlob = await res.blob();
-            // const pdfFile = new File([pdfBlob], 'extracted_pdf.pdf', { type: 'application/pdf' });
-            // setModifiedFile(pdfFile);
             setModificationResponse(data.savedFileDate)
           } else {
             throw new Error('Server error');
@@ -51,7 +47,7 @@ export const Home = ({user, isAuth, setIsAuth} : HomeProps) => {
           setLoading(false);
         }
       } else {
-          alert("Please select a file to upload.");
+          alert("Please select a file and some pages.");
       }
     }
   
