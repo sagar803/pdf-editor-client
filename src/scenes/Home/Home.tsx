@@ -3,12 +3,14 @@ import Navbar from "../../components/Navbar";
 import PDFViewer from "../../utils/PdfViewer";
 import { MdCancel } from "react-icons/md";
 import { HomeProps } from "../../type";
+import { Loader } from "../Loader/Loader";
 
 export const Home = ({user, isAuth, setIsAuth} : HomeProps) => {
 
     const [selectedPages, setSelectedPages] = useState<Set<number>>(new Set());
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [modificationResponse, setModificationResponse] = useState<any>();
+    const [loading, setLoading] = useState(false);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files && event.target.files[0];
@@ -18,10 +20,13 @@ export const Home = ({user, isAuth, setIsAuth} : HomeProps) => {
         setModificationResponse(null)
       }
     };
+
+    console.log(loading);
     
     const handleUpload = async (e: React.FormEvent) => {
       e.preventDefault();
       if (selectedFile) {
+        setLoading(true);
         try {
           const formData = new FormData();
           formData.append("pdf", selectedFile);
@@ -36,13 +41,14 @@ export const Home = ({user, isAuth, setIsAuth} : HomeProps) => {
             // const pdfBlob = await res.blob();
             // const pdfFile = new File([pdfBlob], 'extracted_pdf.pdf', { type: 'application/pdf' });
             // setModifiedFile(pdfFile);
-            console.log(data.savedFileDate)
             setModificationResponse(data.savedFileDate)
           } else {
             throw new Error('Server error');
           }
         } catch (error) {
           console.log(error);
+        } finally{
+          setLoading(false);
         }
       } else {
           alert("Please select a file to upload.");
@@ -52,7 +58,7 @@ export const Home = ({user, isAuth, setIsAuth} : HomeProps) => {
     return (  
         <div className="w-[100%] h-[100%]">
             <Navbar user={user} setIsAuth={setIsAuth} />
-            <div className="w-[100%] h-[100%]">
+            <div className="w-[100%] h-[90%]">
             {
               (selectedFile == null) ? (
                 <div className="w-[100%] h-[100%] flex items-center justify-center">
@@ -68,49 +74,56 @@ export const Home = ({user, isAuth, setIsAuth} : HomeProps) => {
                   </label>
                 </div>
               ) : (
-                <div className="h-[90%]" >
-                    {
-                      modificationResponse ? (
-                        <div className="flex justify-center items-center h-[100%]">
-                          <a
-                            className="bg-blue-500 text-white font-bold py-2 px-4 rounded m-2 cursor-pointer" 
-                            target="_blank"
-                            href={`${process.env.REACT_APP_API}/${modificationResponse.modifiedToFilePath}`}
-                            download
-                          >
-                            Download Modified File
-                          </a>
-                          <input
-                              type="file"
-                              accept=".pdf"
-                              onChange={handleFileChange}
-                              style={{ display: 'none' }}
-                              id="file-input"
-                          />
-                          <label 
-                              htmlFor="file-input" 
-                              className="bg-blue-500 text-white font-bold py-2 px-4 rounded cursor-pointer"
-                          >
-                              Edit New PDF File
-                          </label>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="flex justify-around">
-                            <div className="flex items-center">
-                              <p>Selected File: {selectedFile.name}</p>
-                              <MdCancel aria-describedby="cancel" className="cursor-pointer" onClick={() => setSelectedFile(null)}/>
+                loading ? (
+                  <Loader />
+                ) : (
+                  <div className="h-[90%]" >
+                      {
+                        modificationResponse ? (
+                          <>
+                            <p>Your File has Successfully Edited</p>
+                            <div className="flex justify-center items-center h-[100%]">
+                              <a
+                                className="bg-blue-500 text-white font-bold py-2 px-4 rounded m-2 cursor-pointer" 
+                                target="_blank"
+                                href={`${process.env.REACT_APP_API}/${modificationResponse.modifiedToFilePath}`}
+                                download
+                              >
+                                Download Modified File
+                              </a>
+                              <input
+                                  type="file"
+                                  accept=".pdf"
+                                  onChange={handleFileChange}
+                                  style={{ display: 'none' }}
+                                  id="file-input"
+                              />
+                              <label 
+                                  htmlFor="file-input" 
+                                  className="bg-blue-500 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                              >
+                                  Edit New PDF File
+                              </label>
                             </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex justify-around">
+                              <div className="flex items-center">
+                                <p>Selected File: {selectedFile.name}</p>
+                                <MdCancel aria-describedby="cancel" className="cursor-pointer" onClick={() => setSelectedFile(null)}/>
+                              </div>
 
-                            <button onClick={handleUpload} className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-2 cursor-pointer">
-                                Upload
-                            </button>
-                          </div>
-                          <PDFViewer selectedPages={selectedPages} setSelectedPages={setSelectedPages} pdfFile={selectedFile}/>
-                        </>
-                      )
-                    }
-                </div>
+                              <button onClick={handleUpload} className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-2 cursor-pointer">
+                                  Upload
+                              </button>
+                            </div>
+                            <PDFViewer selectedPages={selectedPages} setSelectedPages={setSelectedPages} pdfFile={selectedFile}/>
+                          </>
+                        )
+                      }
+                  </div>
+                )
               )
             }
             </div>
